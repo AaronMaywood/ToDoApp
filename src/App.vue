@@ -13,9 +13,10 @@ watchEffect(() => {
 function addTodo(event){
 	const newTodo = {
 		key: idCounter++,
-		title: event.target.value,
+		title: event.target.value.trim(),
 		completed: false,
 	};
+	event.target.value = '';
 	todos.value.push(newTodo);
 }
 
@@ -28,25 +29,31 @@ const editedTodo = ref();
 let beforeEditCache = '';
 function editTodo(todo){
 	beforeEditCache = todo.title;
-	console.log(`before`,beforeEditCache, todo);
 	editedTodo.value = todo;
 }
 
 function cancelEdit(todo) {
-console.log('cancel')
 	editedTodo.value = null;
 	todo.title = beforeEditCache;
 }
 
-function doneEdit(todo){
-console.log('done')
-	editedTodo.value = null;
+function doneEdit(todo,event){
+	// done が二回実行される対策としてif文を入れている
+	// はじめに@keyup.enter にてdoneEditが起動するが、doneEdit完了時に@blue が働いてもう一度doneEditが呼び出される
+	if(editedTodo.value !== null){
+		editedTodo.value = null;
+		todo.title = todo.title.trim();
+		if( todo.title === '' ) {
+			removeTodo(todo);
+		}
+	}
 }
 
 function removeTodo(todo){
-	todos.value.splice( todos.value.indexOf(todo), 1);
+	if( todos.value.indexOf(todo) >= 0 ){
+		todos.value.splice( todos.value.indexOf(todo), 1);
+	}
 }
-
 
 const filters = {
 	all: (todos) => todos,
@@ -76,6 +83,9 @@ function onHashChange() {
 	}
 }
 
+function test(event){
+	console.log('test',event);
+}
 </script>
 
 <template>
@@ -84,7 +94,7 @@ function onHashChange() {
 			<h1>ToDoメモ</h1>
 			<input type="text" placeholder="やりたいことを書いてください" class="new-todo" @keyup.enter="addTodo">
 		</header>
-		<section class="main">
+		<section class="main" v-show="todos.length">
 			<input id="toggle-all" class="toggle-all" type="checkbox" @change="toggleAll">
 			<label for="toggle-all"><!-- 全て完了にする --></label>
 			<ul class="todo-list">
@@ -104,21 +114,21 @@ function onHashChange() {
 							@click="removeTodo(todo)"
 						><!-- 削除 --></button>
 					</div>
+					<!-- @vue:mounted="({ el }) => el.focus()" -->
 					<input
 						type="text"
 						class="edit"
 						v-if="editedTodo === todo"
 						v-model="todo.title"
-						@vue:mounted="({ el }) => el.focus()"
+						@vue:mounted="test"
 						@blur="doneEdit(todo)"
 						@keyup.enter="doneEdit(todo)"
 						@keyup.escape="cancelEdit(todo)"
-						@keyup.page-up="cancelEdit(todo)"
 					>
 				</li>
 			</ul>
 		</section>
-		<footer class="footer">
+		<footer class="footer" v-show="todos.length">
 			<span class="todo-count">
 				<strong>残り{{ remaining }}つ</strong>
 			</span>
@@ -133,7 +143,11 @@ function onHashChange() {
 					<a href="#/completed" :class="{ selected: visibility === 'completed' }">完了済み</a>
 				</li>
 			</ul>
-			<button class="clear-completed" @click="removeCompleted">完了したToDoを削除</button>
+			<button
+				class="clear-completed"
+				@click="removeCompleted"
+				v-show="todos.length >= remaining"
+			>完了したToDoを削除</button>
 		</footer>
 	</section>
 </template>
