@@ -154,31 +154,28 @@ function test(event){
 
 <style>
 body {
+	min-width: 230px;
+	max-width: 550px;
+	margin: 0 auto;
+	background: #f5f5f5;
 	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	line-height: 1.4em;
-	background: #f5f5f5;
-	color: #111111;
-	margin: 0 auto;
 	font-weight: 300;
 }
 
+/* デフォルトのスタイルをリセット */
 button {
-	margin: 0;
-	padding: 0;
+	appearance: none;
 	border: 0;
 	background: none;
 	font-size: 100%;
 	vertical-align: baseline;
-	font-family: inherit;
-	font-weight: inherit;
-	color: inherit;
-	appearance: none;
 }
 
 .todoapp {
-	background: #fff;
 	margin: 130px 0 40px 0;
-	position: relative;
+	background: #fff;
+	position: relative; /* footer::before のpositionプロパティの規準位置 */
 	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2),
 	            0 25px 50px 0 rgba(0, 0, 0, 0.1);
 }
@@ -187,23 +184,20 @@ button {
 	position: absolute;
 	top: -140px;
 	width: 100%;
-	font-size: 80px;
-	font-weight: 200;
 	text-align: center;
 	color: #b83f45;
+	font-size: 80px;
+	font-weight: 200;
 }
 
 .new-todo,
 .edit {
-	position: relative;
-	margin: 0;
-	width: 100%;
-	font-size: 24px;
-	font-family: inherit;
-	font-weight: inherit;
-	line-height: 1.4em;
-	color: inherit;
 	padding: 6px;
+	position: relative;
+	width: 100%;
+	margin: 0;
+	font-size: 24px;
+	line-height: 1.4em;
 	border: 1px solid #999;
 	box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
 	box-sizing: border-box;
@@ -224,22 +218,21 @@ button {
 }
 
 .toggle-all {
-	width: 1px;
-	height: 1px;
-	border: none; /* Mobile Safari */
-	opacity: 0;
+	/* チェックボックスを見えないように隠す */
 	position: absolute;
-	right: 100%;
-	bottom: 100%;
+	opacity: 0;
 }
 
 .toggle-all + label {
+	font-size: 0;
+	/* ボックスの大きさを指定して */
+	width: 45px;
+	height: 65px;
+	/* そのボックスの縦横中央に表示 */
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 45px;
-	height: 65px;
-	font-size: 0;
+	/* 所定の位置から上にずらして表示 */
 	position: absolute;
 	top: -65px;
 	left: -0;
@@ -247,13 +240,13 @@ button {
 
 .toggle-all + label:before {
 	content: '❯';
-	display: inline-block;
 	font-size: 22px;
 	color: #949494;
 	padding: 10px 27px 10px 27px;
 	transform: rotate(90deg);
 }
 
+/* チェックしたら色を変える */
 .toggle-all:checked + label:before {
 	color: #484848;
 }
@@ -265,7 +258,7 @@ button {
 }
 
 .todo-list li {
-	position: relative;
+	position: relative; /* 選択するチェックボックスと削除する x アイコンの規定位置 */
 	font-size: 24px;
 	border-bottom: 1px solid #ededed;
 }
@@ -291,14 +284,14 @@ button {
 }
 
 .todo-list li .toggle {
-	text-align: center;
-	width: 40px;
-	height: auto;
+	margin: auto 0;
+	appearance: none;
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	margin: auto 0;
-	appearance: none;
+	/* クリック可能なエリアを作るためにサイズを指定 */
+	width: 40px;
+	height: auto;
 }
 
 .todo-list li .toggle {
@@ -306,12 +299,14 @@ button {
 }
 
 .todo-list li .toggle + label {
+	/* 選択エリアを示す◯印 */
 	background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%23949494%22%20stroke-width%3D%223%22/%3E%3C/svg%3E');
 	background-repeat: no-repeat;
 	background-position: center left;
 }
 
 .todo-list li .toggle:checked + label {
+	/* 選択エリアの◯に☑をつけた印 */
 	background-image: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%22-10%20-18%20100%20135%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2250%22%20fill%3D%22none%22%20stroke%3D%22%2359A193%22%20stroke-width%3D%223%22%2F%3E%3Cpath%20fill%3D%22%233EA390%22%20d%3D%22M72%2025L42%2071%2027%2056l-4%204%2020%2020%2034-52z%22%2F%3E%3C%2Fsvg%3E');
 }
 
@@ -374,26 +369,23 @@ button {
 	text-align: center;
 	font-size: 15px;
 	border-top: 1px solid #e6e6e6;
+	display: flex;
+	justify-content: space-between;
 }
 
+/* box-shadowを駆使して階段状の影 */
 .footer:before {
 	content: '';
 	position: absolute;
 	right: 0;
-	bottom: 0;
 	left: 0;
+	bottom: 0;
 	height: 50px;
-	overflow: hidden;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
 	            0 8px 0 -3px #f6f6f6,
 	            0 9px 1px -3px rgba(0, 0, 0, 0.2),
 	            0 16px 0 -6px #f6f6f6,
 	            0 17px 2px -6px rgba(0, 0, 0, 0.2);
-}
-
-.todo-count {
-	float: left;
-	text-align: left;
 }
 
 .todo-count strong {
@@ -404,13 +396,13 @@ button {
 	margin: 0;
 	padding: 0;
 	list-style: none;
+	/* 中央寄せ */
 	position: absolute;
 	right: 0;
 	left: 0;
-}
-
-.filters li {
-	display: inline;
+	/* 子要素を横並びで中央寄せ */
+	display: flex;
+	justify-content: center;
 }
 
 .filters li a {
@@ -431,37 +423,14 @@ button {
 }
 
 .clear-completed,
-html .clear-completed:active {
-	float: right;
-	position: relative;
+.clear-completed:active {
 	line-height: 19px;
-	text-decoration: none;
 	cursor: pointer;
+	/* 左隣のulがposition:absolute; でこの要素の上に重なっているため、重なり順をコントロールするのに relative を指定している */
+	position: relative;
 }
 
 .clear-completed:hover {
-	text-decoration: underline;
-}
-
-.info {
-	margin: 65px auto 0;
-	color: #4d4d4d;
-	font-size: 11px;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-	text-align: center;
-}
-
-.info p {
-	line-height: 1;
-}
-
-.info a {
-	color: inherit;
-	text-decoration: none;
-	font-weight: 400;
-}
-
-.info a:hover {
 	text-decoration: underline;
 }
 
@@ -475,6 +444,7 @@ html .clear-completed:active {
 	}
 }
 
+/* クリックして選択した箇所に赤枠をつけて目立たせる */
 :focus,
 .toggle:focus + label,
 .toggle-all:focus + label {
