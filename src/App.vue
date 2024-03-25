@@ -1,8 +1,6 @@
 <script setup>
 import { ref, computed, watchEffect } from 'vue';
 
-let idCounter = 0;
-
 // ToDoをローカルストレージに保存する
 const STORAGE_KEY = 'vue-todomvc';
 const todos = ref(JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'))
@@ -12,7 +10,7 @@ watchEffect(() => {
 
 function addTodo(event){
 	const newTodo = {
-		key: idCounter++,
+		key: Date.now(),
 		title: event.target.value.trim(),
 		completed: false,
 	};
